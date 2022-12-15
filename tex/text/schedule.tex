@@ -1,0 +1,35 @@
+\section{프로젝트 일정 및 제한 사항}{\label{sec:schedule}}
+
+\subsection{제출 기한}
+\begin{itemize}\tightlist
+    \item 제출 마감 : 12월 18일 (일) 자정(23:59), 지각 제출에 대한 감점 있음
+    \item 지각 제출 기한 : 12월 20일 (화) 자정 (23:59), 일당 5점씩 감점, 이후 제출 불가
+\end{itemize}
+
+
+\subsection{제한 사항}
+    \begin{itemize}\tightlist
+            \item 모델의 학습 관련
+            \begin{itemize}\tightlist
+                \item 모델은 Google Colab에서 제공하는 GPU 기준 \textcolor{red}{10분 이내에 학습 완료}되어야 한다.
+                \item Train 시간이 10분 이상일 시 초과 시간에 따라 감점한다.
+            \end{itemize}
+        \item 모델 관련
+            \begin{itemize}\tightlist
+                \color{red}
+                \item Pretrained model은 사용 불가능하다.
+                \item 모델 구조는 분류 분야의 논문을 참고해서 구성해도 좋으나, torch 또는 torchvision 등을 통해 불러오지 않고 직접 구현해야 한다. 
+                \item Torch에서 (대체로 Pretrained model과 함께) 제공하는 ResNet이나 MobileNet, Transformer 따위의 모델을 불러와서 사용하는 것은 불가능하다.
+            \end{itemize}
+        \item 라이브러리 관련
+            \begin{itemize}\tightlist
+                \item Python 표준 라이브러리, Pytorch, Numpy 제공 라이브러리만 모델 구성 및 학습에 사용 가능하다.
+                \item Matplotlib, Seaborn 등 시각화를 위한 라이브러리는 자유롭게 활용해도 좋다.
+                \item 언급된 것 외의 학습성능 향상을 위한 라이브러리 사용 시 조교에게 문의하여라.
+            \end{itemize}
+        \item 데이터 관련
+            \begin{itemize}\tightlist
+                \item 데이터 전처리는 자유롭게 진행할 수 있다.
+                \item 데이터로더는 \href{https://github.com/jaehyun-ko/EEE4178-Project-2022/blob/main/src/Project_2022_utils.ipynb}{프로젝트 도구}에서 제공된 것을 가공하지 않고 사용한다.
+            \end{itemize}
+    \end{itemize}
