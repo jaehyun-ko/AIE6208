@@ -92,5 +92,14 @@ network에게 맡긴 것으로 볼 수 있지만, 다차원의 입력의 차원�
 
 
 \subsection{YOLOv7: Trainable bag-of-freebies sets new state-of-the-art for real-time object detectors}{\label{subsec:yolov7}}
+이 논문은 2015년부터 실시간 object Detection, segmentation 등의 분야에서 좋은 성적을 보이고 있는
+YOLO(You Only Look Once)의 최신 버전인 YOLOv7을 제안한다.
+이 논문의 목적은 영상으로부터의 실시간 물체 탐지이며 SOTA(State-of-the-art)를 달성하기 위해 다음과 같은 방법들을 제안한다.
+ \begin{enumerate}\tightlist
+    \item bag-of-freebies: 학습 과정에서의 부담을 추론 과정에서는 추가 계산 비용이 들지 않으면서 네트워크의 성능을 향상시키는 기법
+    \item planned re-parameterized model:model re-parameterization 및 dynamic label assignment 방법 제안
+    \item extend,compound scaling 방법 제안
+\end{enumerate}
 
-asdf
+\subsubsection{Method}{\label{subsubsec:yolov7_method}}
+
