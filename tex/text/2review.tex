@@ -3,7 +3,7 @@
 \subsection{Multi-modal fusion transformer for end-to-end autonomous driving}{\label{subsec:Transfuser}}
 \begin{figure}[htp]
     \centering
-    \includegraphics[width=0.5\textwidth]{figures/Transfuser_case.png}
+    \includegraphics[width=0.3\textwidth]{figures/Transfuser_case.png}
     \caption{논문에서 해결하려는 문제 상황}
     \label{fig:tf_case}
 \end{figure}
@@ -13,7 +13,7 @@
 두 센서로부터 얻을 수 있는 정보를 결합하여 차량의 주행을 제어하는 것을 목적으로 한다.
 \begin{figure}[htp]
     \centering
-    \includegraphics[width=\textwidth]{figures/Transfuser.png}
+    \includegraphics[width=0.8\textwidth]{figures/Transfuser.png}
     \caption{Transfuser 구조}
     \label{fig:tf}
 \end{figure}
@@ -64,10 +64,10 @@ Transformer로는 GPT 모델을 사용하였다.
 \paragraph*{학습}
 모델의 Loss는 전문가의 주행 데이터와의 L2 distance를 사용하였다. 
 
-\subsubsection{result}
+\subsubsection{Result}
 \begin{figure}[htp]
     \centering
-    \includegraphics[width=\linewidth]{figures/Transfuser_result.png}
+    \includegraphics[width=0.8\linewidth]{figures/Transfuser_result.png}
     \caption{Transfuser 실험 결과}
     \label{fig:tf_res}
 \end{figure}
@@ -92,5 +92,66 @@ network에게 맡긴 것으로 볼 수 있지만, 다차원의 입력의 차원�
 
 
 \subsection{YOLOv7: Trainable bag-of-freebies sets new state-of-the-art for real-time object detectors}{\label{subsec:yolov7}}
+이 논문은 2015년부터 실시간 object Detection, segmentation 등의 분야에서 좋은 성적을 보이고 있는
+YOLO(You Only Look Once)의 최신 버전인 YOLOv7을 제안한다.
+이 논문의 목적은 영상으로부터의 실시간 물체 탐지이며 SOTA(State-of-the-art)를 달성하기 위해 다음과 같은 방법들을 제안한다.
+ \begin{enumerate}\tightlist
+    \item 모델 구조 관점
+    \begin{enumerate}\tightlist
+        \item Extend ELAN
+        \item compound scaling
+    \end{enumerate}
+    \item bag-of-freebies: 학습 과정에서의 부담을 추론 과정에서는 추가 계산 비용이 들지 않으면서 네트워크의 성능을 향상시키는 기법 관점
+    \begin{enumerate}\tightlist
+        \item Planned re-parameterized convolution
+        \item Coarse for auxiliary and fine for lead loss
+        \item Batch normalization, 
+    \end{enumerate}
+\end{enumerate}
 
-asdf
+\subsubsection{Method}{\label{subsubsec:yolov7_method}}
+\paragraph*{Architecture}
+성능 개선을 위해 사용된 구조는 두 가지이다.
+첫째는 Extended efficient layer aggregation networks(ELAN)이고,
+둘째는 Model scaling for concatenation-based models(compound scaling)이다.
+gradient decent 관점에서 보면, 모델의 학습에서 batch 하나에 대한 학습 속도는 gradient path의 길이에 비례한다.
+ELAN은 이 관점에서 "가장 효율적인 네트워크를 구성하려면 어떻게 해야 할까?" 라는 질문을 통해
+가장 긴 gradient path와 가장 짧은 gradient path를 조정함으로써 학습 속도를 높이는 방법을 제안했다.
+그러나 이 방식조차 block을 매우 많이 쌓을 경우 stable state가 무너지는 문제가 생겼다.
+이를 해결하기 위해 YoLoV7에서는 Expand, shuffle, merge cardinality를 이용한 Extended ELAN이라는 구조를 제시하였다.
+이 구조를 통해 scaling에 따라 transition layer는 변경되지 않고 computational block의 크기만 조절할 수 있게 되었다.
+
+ResNet\cite{Resnet} 등에서 사용된 Model scaling은 모델의 일부 특성을 조절하고, 추론 시간을 원하는 대로 조절하기 위해
+다양한 크기의 모델을 학습시키고, 이를 조합하는 방법이다.
+그런데 앞서 제시한 E-ELAN과 같은 concatenation 기반의 결합은 scaling에 따라
+transition layer의 깊이뿐만 아니라 너비(입력 차원)도 함께 달라지기 때문에, 이를 함께 고려하는 방식으로 compound scaling을 제안하였다.
+Computation block에만 depth scaling을 수행하고 나머지 block은 이 변경에 따라 width scaling을 수행하는 방식이다.
+
+\paragraph*{Trainable bag-of-freebies}
+
+\subparagraph*{Planned re-parameterized convolution} RepConv에서 제안된 re-parameterization을 ResNet 등에서도 활용하기 위해 제안된 방법이다.
+re-parameterization은 학습 시에는 병렬적으로 여러 convolution layer 및 Batch normalization layer를 학습한 뒤
+추론시에는 이를 하나로 합치는 방식이다. 이를 위해 identity connection을 사용하게 되는데, ResNet에 이를 적용하게 되면 Residual connetion을 파괴하게 된다.
+이를 해결하기 위해 YoloV7에서는 identity connection을 사용하지 않는 방식의 ReConvN을 제안하였다.
+\subparagraph*{Coarse for auxiliary and fine for lead loss}
+Deep supervision 기법을 사용하면 Lead head와 Auxiliary head의 label을 동시에 만들 수 없는데,
+lead head prediction으로 두 head를 동시에 학습하거나 lead head prediction을 guidance로 사용하는 방식으로 해결했다.
+두번째 방법의 label은 coarse-to-fine hierarchical labels이라고 부른다.
+coarse label은 positive assignment constraint를 완화시킨 label이며, Fine label은 Lead head guided label과 같은 방식으로
+lead head의 prediction으로 만든 label이다.
+
+\subsubsection{Result}
+COCO dataset으로 모델의 성능을 평가하였다. 지면상 한계로 실험 결과는 보고서에서는 생략하였다.
+기존 모델들과의 성능을 비교하였더니 수행 시간 및 정확도의 trade-off 면에서 가장 좋은 성능을 보여주었다.
+% \begin{figure}[htp]
+%     \centering
+%     \includegraphics[width=0.5\linewidth]{figures/yolo_res.png}
+%     \caption{YoloV7 실험 및 비교 결과}
+%     \label{fig:yolo_res}
+% \end{figure}
+\subsubsection{Discussion}
+수업 시간에 다룬 Neural Network의 학습 속도(Gradient Decent 관점에서)를 개선하는 방법으로
+Gradient Path를 조절하는 방법이 제안되었다.
+또한 학습 과정에서 labeling은 매우 번거롭고 어려운 일인데, 특히 auxiliary head의 label을 구하는 과정에서
+coarse-to-fine hierarchical labels를 도입하여 해결하였다.
+모델의 복잡도와 추론 시간은 비례하는데, 이를 개선하기 위해 모델의 구조를 개선하는 과정 또한 포함되어 있다.
