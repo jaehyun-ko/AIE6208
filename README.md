@@ -1,3 +1,2 @@
-# TA-EEE4178-Project-2022
-Project materials for TA of
-Introduction to Artificial Intelligence, Sogang Univ.
+# AIE6208
+Final Report for Pattern Recognition(AIE6208), Sogang Univ.
